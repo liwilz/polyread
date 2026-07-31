@@ -19,6 +19,8 @@ Road Map (For me)
 
 - Allow for auto scrolling and speed control
 
+- QoL: Jump, Search, Bookmarking, Progress tracking, Last read location
+
 ## Phase 2: TTS (Text-to-Speech) Support
 
 - Implement some TTS engine abstraction to support multiple TTS engines
