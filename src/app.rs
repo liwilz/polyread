@@ -1,3 +1,5 @@
+use std::fs;
+
 use crate::event::{AppEvent, Event, EventHandler};
 
 use ratatui::DefaultTerminal;
@@ -8,8 +10,10 @@ use ratatui::crossterm::event::{self, KeyCode, KeyEvent, KeyModifiers};
 pub struct App {
     /// Is the application running?
     pub running: bool,
-    /// Counter.
-    pub counter: u8,
+    /// Text from the Doc
+    pub text: Vec<String>,
+    /// Line number focused
+    pub counter: usize,
     /// Event handler.
     pub events: EventHandler,
 }
@@ -18,6 +22,11 @@ impl Default for App {
     fn default() -> Self {
         Self {
             running: true,
+            text: fs::read_to_string("Psychology_of_the_Unconscious.txt")
+                .unwrap_or_else(|_| "Could not read doc.txt".to_string())
+                .lines()
+                .map(|line| line.to_string())
+                .collect(),
             counter: 0,
             events: EventHandler::new(),
         }
@@ -64,8 +73,8 @@ impl App {
             KeyCode::Char('c' | 'C') if key_event.modifiers == KeyModifiers::CONTROL => {
                 self.events.send(AppEvent::Quit)
             }
-            KeyCode::Right => self.events.send(AppEvent::Increment),
-            KeyCode::Left => self.events.send(AppEvent::Decrement),
+            KeyCode::Char('j') => self.events.send(AppEvent::Increment),
+            KeyCode::Char('k') => self.events.send(AppEvent::Decrement),
             // Other handlers you could add here.
             _ => {}
         }

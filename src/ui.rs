@@ -20,12 +20,34 @@ impl Widget for &App {
             .title_alignment(Alignment::Center)
             .border_type(BorderType::Rounded);
 
+        // TODO: Handle this properly in app event handling. quick fix for out of bounds
+        let upper_bound = if self.counter >= 20 {
+            self.counter - 20
+        } else {
+            0
+        };
+
+        let lower_bound = if self.counter + 5 < self.text.len() {
+            self.counter + 20
+        } else {
+            self.text.len()
+        };
+
         let text = format!(
-            "This is a tui template.\n\
-                Press `Esc`, `Ctrl-C` or `q` to stop running.\n\
-                Press left and right to increment and decrement the counter respectively.\n\
-                Counter: {}",
-            self.counter
+            "Ebook reader, use j to move down, k to move up\n
+             ----------------------------------------------\n{}",
+            self.text[upper_bound..lower_bound]
+                .iter()
+                .enumerate()
+                .map(|(i, line)| {
+                    if i + upper_bound == self.counter {
+                        format!("> {}", line)
+                    } else {
+                        format!("  {}", line)
+                    }
+                })
+                .collect::<Vec<String>>()
+                .join("\n")
         );
 
         let paragraph = Paragraph::new(text)
