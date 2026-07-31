@@ -7,11 +7,13 @@ Road Map (For me)
 ## Phase 0: MVP (Minimum Viable Product)
 
 - Be able to handle files like txt, epub, pdf, and docx etc.
-  - At least 1
+  - At least 1 format
 
 - Provide basic loading and scrolling through the book.
 
 ## Phase 1: Keyboard centric navigation
+
+- Partly load files into memory for efficiency
 
 - Use vim-like keybindings for navigation, selection (visual mode)
 
@@ -40,4 +42,14 @@ Road Map (For me)
 
 ## Phase 4
 
-- Automatic language mapping using translation engines or LLMs
+- Automatic language mapping using translation engines or AI models
+
+- Note: Should not require an account either way: local or free remote solutions
+
+- Note: Small LLMs are surprisingly easy to run, but it's unnecessary.
+
+## Extra Features
+
+Translation to user's preferred language?
+
+Fun idea: Type to read
