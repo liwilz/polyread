@@ -34,9 +34,9 @@ pub enum Event {
 #[derive(Clone, Debug)]
 pub enum AppEvent {
     /// Increment the counter.
-    Increment,
+    ScrollDown,
     /// Decrement the counter.
-    Decrement,
+    ScrollUp,
     /// Quit the application.
     Quit,
 }

@@ -13,7 +13,7 @@ pub struct App {
     /// Text from the Doc
     pub text: Vec<String>,
     /// Line number focused
-    pub counter: usize,
+    pub cursor_line: usize,
     /// Event handler.
     pub events: EventHandler,
 }
@@ -27,7 +27,7 @@ impl Default for App {
                 .lines()
                 .map(|line| line.to_string())
                 .collect(),
-            counter: 0,
+            cursor_line: 0,
             events: EventHandler::new(),
         }
     }
@@ -58,8 +58,8 @@ impl App {
                 _ => {}
             },
             Event::App(app_event) => match app_event {
-                AppEvent::Increment => self.increment_counter(),
-                AppEvent::Decrement => self.decrement_counter(),
+                AppEvent::ScrollDown => self.scroll_down(),
+                AppEvent::ScrollUp => self.scroll_up(),
                 AppEvent::Quit => self.quit(),
             },
         }
@@ -73,8 +73,8 @@ impl App {
             KeyCode::Char('c' | 'C') if key_event.modifiers == KeyModifiers::CONTROL => {
                 self.events.send(AppEvent::Quit)
             }
-            KeyCode::Char('j') => self.events.send(AppEvent::Increment),
-            KeyCode::Char('k') => self.events.send(AppEvent::Decrement),
+            KeyCode::Char('j') => self.events.send(AppEvent::ScrollDown),
+            KeyCode::Char('k') => self.events.send(AppEvent::ScrollUp),
             // Other handlers you could add here.
             _ => {}
         }
@@ -92,11 +92,11 @@ impl App {
         self.running = false;
     }
 
-    pub fn increment_counter(&mut self) {
-        self.counter = self.counter.saturating_add(1);
+    pub fn scroll_down(&mut self) {
+        self.cursor_line = self.cursor_line.saturating_add(1);
     }
 
-    pub fn decrement_counter(&mut self) {
-        self.counter = self.counter.saturating_sub(1);
+    pub fn scroll_up(&mut self) {
+        self.cursor_line = self.cursor_line.saturating_sub(1);
     }
 }

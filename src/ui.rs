@@ -20,18 +20,11 @@ impl Widget for &App {
             .title_alignment(Alignment::Center)
             .border_type(BorderType::Rounded);
 
-        // TODO: Handle this properly in app event handling. quick fix for out of bounds
-        let upper_bound = if self.counter >= 20 {
-            self.counter - 20
-        } else {
-            0
-        };
+        let viewport_height = area.height as usize;
 
-        let lower_bound = if self.counter + 5 < self.text.len() {
-            self.counter + 20
-        } else {
-            self.text.len()
-        };
+        let upper_bound = viewport_height.saturating_sub(4).min(self.cursor_line);
+
+        let lower_bound = (upper_bound + viewport_height).min(self.text.len());
 
         let text = format!(
             "Ebook reader, use j to move down, k to move up\n
@@ -40,7 +33,7 @@ impl Widget for &App {
                 .iter()
                 .enumerate()
                 .map(|(i, line)| {
-                    if i + upper_bound == self.counter {
+                    if i + upper_bound == self.cursor_line {
                         format!("> {}", line)
                     } else {
                         format!("  {}", line)
