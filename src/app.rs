@@ -1,0 +1,102 @@
+use std::fs;
+
+use crate::event::{AppEvent, Event, EventHandler};
+
+use ratatui::DefaultTerminal;
+use ratatui::crossterm::event::{self, KeyCode, KeyEvent, KeyModifiers};
+
+/// Application.
+#[derive(Debug)]
+pub struct App {
+    /// Is the application running?
+    pub running: bool,
+    /// Text from the Doc
+    pub text: Vec<String>,
+    /// Line number focused
+    pub cursor_line: usize,
+    /// Event handler.
+    pub events: EventHandler,
+}
+
+impl Default for App {
+    fn default() -> Self {
+        Self {
+            running: true,
+            text: fs::read_to_string("Psychology_of_the_Unconscious.txt")
+                .unwrap_or_else(|_| "Could not read doc.txt".to_string())
+                .lines()
+                .map(|line| line.to_string())
+                .collect(),
+            cursor_line: 0,
+            events: EventHandler::new(),
+        }
+    }
+}
+
+impl App {
+    /// Constructs a new instance of [`App`].
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Run the application's main loop.
+    pub fn run(mut self, mut terminal: DefaultTerminal) -> color_eyre::Result<()> {
+        while self.running {
+            terminal.draw(|frame| frame.render_widget(&self, frame.area()))?;
+            self.handle_events()?;
+        }
+        Ok(())
+    }
+
+    pub fn handle_events(&mut self) -> color_eyre::Result<()> {
+        match self.events.next()? {
+            Event::Tick => self.tick(),
+            Event::Crossterm(event) => match event {
+                event::Event::Key(key_event) if key_event.kind == event::KeyEventKind::Press => {
+                    self.handle_key_event(key_event)?
+                }
+                _ => {}
+            },
+            Event::App(app_event) => match app_event {
+                AppEvent::ScrollDown => self.scroll_down(),
+                AppEvent::ScrollUp => self.scroll_up(),
+                AppEvent::Quit => self.quit(),
+            },
+        }
+        Ok(())
+    }
+
+    /// Handles the key events and updates the state of [`App`].
+    pub fn handle_key_event(&mut self, key_event: KeyEvent) -> color_eyre::Result<()> {
+        match key_event.code {
+            KeyCode::Esc | KeyCode::Char('q') => self.events.send(AppEvent::Quit),
+            KeyCode::Char('c' | 'C') if key_event.modifiers == KeyModifiers::CONTROL => {
+                self.events.send(AppEvent::Quit)
+            }
+            KeyCode::Char('j') => self.events.send(AppEvent::ScrollDown),
+            KeyCode::Char('k') => self.events.send(AppEvent::ScrollUp),
+            // Other handlers you could add here.
+            _ => {}
+        }
+        Ok(())
+    }
+
+    /// Handles the tick event of the terminal.
+    ///
+    /// The tick event is where you can update the state of your application with any logic that
+    /// needs to be updated at a fixed frame rate. E.g. polling a server, updating an animation.
+    pub fn tick(&self) {}
+
+    /// Set running to false to quit the application.
+    pub fn quit(&mut self) {
+        self.running = false;
+    }
+
+    pub fn scroll_down(&mut self) {
+        self.cursor_line = self.cursor_line.saturating_add(1);
+    }
+
+    pub fn scroll_up(&mut self) {
+        self.cursor_line = self.cursor_line.saturating_sub(1);
+    }
+}
