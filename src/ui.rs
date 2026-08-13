@@ -20,11 +20,11 @@ impl Widget for &App {
             .title_alignment(Alignment::Center)
             .border_type(BorderType::Rounded);
 
-        let viewport_height = area.height as usize;
+        let viewport_lines = area.height.saturating_sub(4) as usize;
+        let viewport_lines = viewport_lines.max(1);
 
-        let upper_bound = viewport_height.saturating_sub(4).min(self.cursor_line);
-
-        let lower_bound = (upper_bound + viewport_height).min(self.text.len());
+        let upper_bound = self.cursor_line.saturating_sub(viewport_lines / 2);
+        let lower_bound = (upper_bound + viewport_lines).min(self.text.len());
 
         let text = format!(
             "Ebook reader, use j to move down, k to move up\n
@@ -46,8 +46,7 @@ impl Widget for &App {
         let paragraph = Paragraph::new(text)
             .block(block)
             .fg(Color::Cyan)
-            .bg(Color::Black)
-            .centered();
+            .bg(Color::Black);
 
         paragraph.render(area, buf);
     }
