@@ -1,12 +1,5 @@
 # Road Map (For me)
 
-## Phase 0: MVP (Minimum Viable Product)
-
-- Be able to handle files like txt, epub, pdf, and docx etc.
-  - At least 1 format
-
-- Provide basic loading and scrolling through the book.
-
 ## Phase 1: Keyboard centric navigation
 
 - Partly load files into memory for efficiency
@@ -51,3 +44,5 @@
 Translation to user's preferred language?
 
 Fun idea: Type to read
+
+Further extension: add automatic tone detection, character speech differentiation.
