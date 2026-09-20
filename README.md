@@ -2,18 +2,22 @@
 
 An e-book reader with TTS and same-book multilingual support
 
-Road Map (For me)
+## Usage
 
-## Phase 0: MVP (Minimum Viable Product)
+> polyread [options] <file>
+available options:
+  -h, --help            Show this help message
+  -v, --version         Show version information
+  -f, --format <format> Specify the format of the input file (txt, epub, pdf, docx)
+  -l, --language <lang> Specify the language for TTS (e.g., en, es, fr)
+  -s, --speed <speed>   Set the TTS speed (default: 1.0)
+  -b, --bookmark        Add a bookmark at the current location
+  -c, --chapter         Jump to a specific chapter
+  -S, --search <query>  Search for a specific term in the book
+  -p, --progress        Show reading progress
+  -t, --tts <model>     Specify the TTS model to use (default: system TTS)
 
-- Be able to handle files like txt, epub, pdf, and docx etc.
-  - At least 1 format
-
-- Provide basic loading and scrolling through the book.
-
-## Phase 1: Keyboard centric navigation
-
-keybind draft (v1)
+## key bind draft (v.1)
 
 Global / App
 
@@ -75,46 +79,3 @@ Future-reserved
 
     . - repeat last action (reserve now, implement later)
     : - command palette/command line (optional future)
-
-- Partly load files into memory for efficiency
-
-- Use vim-like keybindings for navigation, selection (visual mode)
-
-- Allow for auto scrolling and speed control
-
-- QoL: Jump, Search, Bookmarking, Progress tracking, Last read location
-
-## Phase 2: TTS (Text-to-Speech) Support
-
-- Implement some TTS engine abstraction to support multiple TTS engines
-
-- Implement a TTS engine
-
-## Phase 3: Multilingual Support
-
-- Basic support for having books in different languages (Single language per book)
-
-- Implement manual selection of language for TTS
-
-- Build underlying infrastructure to record and restore memory of language
-  choice on selected text
-
-  - Efficiency concern:
-    - choice of language stored to track locations only
-    - Buffer-like retrieval for memory concerns
-
-- Extra keyboard controls to easily note language of selected text (e.g. macros)
-
-## Phase 4
-
-- Automatic language mapping using translation engines or AI models
-
-- Note: Should not require an account either way: local or free remote solutions
-
-- Note: Small LLMs are surprisingly easy to run, but it's unnecessary.
-
-## Extra Features
-
-Translation to user's preferred language?
-
-Fun idea: Type to read
